@@ -53,10 +53,10 @@ export const UserManagement = () => {
     }
   };
 
-  const updateUserRole = async (userId: string, newRole: string) => {
+  const updateUserRole = async (email: string, newRole: string) => {
     try {
-      await axios.patch(`${API_URL}/auth/users/${userId}/role`, 
-        { role: newRole },
+      await axios.post(`${API_URL}/auth/set-role`, 
+        { email, role: newRole },
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -66,7 +66,7 @@ export const UserManagement = () => {
       );
 
       setUsers(users.map(user => 
-        user.id === userId ? { ...user, role: newRole } : user
+        user.email === email ? { ...user, role: newRole } : user
       ));
 
       toast({
@@ -173,8 +173,8 @@ export const UserManagement = () => {
                     <Settings className="w-4 h-4" />
                     <Select
                       value={user.role}
-                      onValueChange={(newRole) => updateUserRole(user.id, newRole)}
-                      disabled={user.id === currentUser?.id}
+                      onValueChange={(newRole) => updateUserRole(user.email, newRole)}
+                      disabled={user.email === currentUser?.email}
                     >
                       <SelectTrigger className="w-32">
                         <SelectValue />
@@ -186,7 +186,7 @@ export const UserManagement = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  {user.id === currentUser?.id && (
+                  {user.email === currentUser?.email && (
                     <span className="text-xs text-muted-foreground">
                       (You)
                     </span>
