@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlayerDetailsDialog } from "@/components/PlayerDetailsDialog";
 import { apiService, Character, Account } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   Search, 
   Filter, 
@@ -29,13 +30,14 @@ const Players = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerWithAccount | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
         const [charactersData, accountsData] = await Promise.all([
-          apiService.getCharacters(),
-          apiService.getAccounts()
+          apiService.getCharacters(accessToken),
+          apiService.getAccounts(accessToken)
         ]);
         
         // Merge character and account data
@@ -73,23 +75,23 @@ const Players = () => {
     try {
       switch (action) {
         case 'ban':
-          await apiService.setBan(accountName);
+          await apiService.setBan(accountName, accessToken);
           break;
         case 'unban':
-          await apiService.clearBan(accountName);
+          await apiService.clearBan(accountName, accessToken);
           break;
         case 'rewardban':
-          await apiService.setRewardBan(accountName);
+          await apiService.setRewardBan(accountName, accessToken);
           break;
         case 'rewardunban':
-          await apiService.clearRewardBan(accountName);
+          await apiService.clearRewardBan(accountName, accessToken);
           break;
       }
       
       // Refresh players data
       const [charactersData, accountsData] = await Promise.all([
-        apiService.getCharacters(),
-        apiService.getAccounts()
+        apiService.getCharacters(accessToken),
+        apiService.getAccounts(accessToken)
       ]);
       
       const playersWithAccounts = charactersData.map(character => ({

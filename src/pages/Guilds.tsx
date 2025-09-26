@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { GuildDetailsDialog } from "@/components/GuildDetailsDialog";
 import { apiService, Guild } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Shield,
   Users,
@@ -26,11 +27,12 @@ const Guilds = () => {
   const [selectedGuild, setSelectedGuild] = useState<Guild | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     const fetchGuilds = async () => {
       try {
-        const data = await apiService.getGuilds();
+        const data = await apiService.getGuilds(accessToken);
         // Ensure data is an array
         if (Array.isArray(data)) {
           setGuilds(data);
