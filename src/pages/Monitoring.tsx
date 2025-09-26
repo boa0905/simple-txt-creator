@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
 import { apiService, PlayerAnalyticsResponse } from "@/services/api";
 import {
   Activity,
@@ -23,15 +24,17 @@ const enum SERVERSTATUS{
 }
 
 const Monitoring = () => {
+  const { accessToken } = useAuth();
+  
   const { data: serverStats, isLoading: statsLoading } = useQuery({
     queryKey: ['serverStats'],
-    queryFn: apiService.getServerStats,
+    queryFn: () => apiService.getServerStats(accessToken),
     refetchInterval: 3000, // Refetch every 3 seconds
   });
 
   const { data: playerAnalytics, isLoading: analyticsLoading, error: analyticsError } = useQuery({
     queryKey: ['playerAnalytics'],
-    queryFn: apiService.getPlayerAnalytics,
+    queryFn: () => apiService.getPlayerAnalytics(accessToken),
     refetchInterval: 60000, // Refetch every minute
   });
 

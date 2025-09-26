@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Trash2, Edit, Plus } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { apiService, NewsArticle } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -21,11 +22,12 @@ const News = () => {
   });
 
   const { toast } = useToast();
+  const { accessToken } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: news = [], isLoading, error } = useQuery({
     queryKey: ["news"],
-    queryFn: apiService.getNews,
+    queryFn: () => apiService.getNews(accessToken),
     retry: false,
   });
 
@@ -45,7 +47,7 @@ const News = () => {
   const newsArray = Array.isArray(news) ? news : [];
 
   const createMutation = useMutation({
-    mutationFn: apiService.createNews,
+    mutationFn: (data: Omit<NewsArticle, 'id' | 'created'>) => apiService.createNews(data, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["news"] });
       setIsCreateDialogOpen(false);
@@ -59,7 +61,7 @@ const News = () => {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Omit<NewsArticle, 'id' | 'created'> }) =>
-      apiService.updateNews(id, data),
+      apiService.updateNews(id, data, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["news"] });
       setIsEditDialogOpen(false);
@@ -73,7 +75,7 @@ const News = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: apiService.deleteNews,
+    mutationFn: (newsId: number) => apiService.deleteNews(newsId, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["news"] });
       toast({ title: "News article deleted successfully" });

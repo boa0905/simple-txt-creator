@@ -183,140 +183,206 @@ export interface Guild {
   lastsaved: number;
 }
 
+const createAuthHeaders = (accessToken?: string) => {
+  return accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {};
+};
+
 export const apiService = {
-  getOnlinePlayers: async (): Promise<OnlinePlayersResponse> => {
-    const response = await fetch(`${API_URL}/db/characters/stats/online`);
+  getOnlinePlayers: async (accessToken?: string): Promise<OnlinePlayersResponse> => {
+    const response = await fetch(`${API_URL}/db/characters/stats/online`, {
+      headers: createAuthHeaders(accessToken),
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch online players');
     }
     return response.json();
   },
 
-  getRegisteredPlayers: async (): Promise<RegisteredPlayersResponse> => {
-    const response = await fetch(`${API_URL}/db/characters/stats/registered`);
+  getRegisteredPlayers: async (accessToken?: string): Promise<RegisteredPlayersResponse> => {
+    const response = await fetch(`${API_URL}/db/characters/stats/registered`, {
+      headers: createAuthHeaders(accessToken),
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch registered players');
     }
     return response.json();
   },
 
-  getCharacters: async (): Promise<Character[]> => {
-    const response = await fetch(`${API_URL}/db/characters`);
+  getCharacters: async (accessToken?: string): Promise<Character[]> => {
+    const response = await fetch(`${API_URL}/db/characters`, {
+      headers: createAuthHeaders(accessToken),
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch characters');
     }
     return response.json();
   },
 
-  updateCharacter: async (name: string, updates: Partial<Character>): Promise<void> => {
+  updateCharacter: async (name: string, updates: Partial<Character>, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    const response = await axios.put(`${API_URL}/db/characters/${name}`, updates);
+    const response = await axios.put(`${API_URL}/db/characters/${name}`, updates, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...createAuthHeaders(accessToken),
+      },
+    });
     return response.data;
   },
 
-  getServerStats: async (): Promise<ServerStatsResponse> => {
-    const response = await fetch(`${API_URL}/system/stats`);
+  getServerStats: async (accessToken?: string): Promise<ServerStatsResponse> => {
+    const response = await fetch(`${API_URL}/system/stats`, {
+      headers: createAuthHeaders(accessToken),
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch system stats");
     }
     return response.json();
   },
 
-  getServerUptime: async (): Promise<ServerUptimeResponse> => {
+  getServerUptime: async (accessToken?: string): Promise<ServerUptimeResponse> => {
     const axios = (await import('axios')).default;
-    const response = await axios.get(`${API_URL}/db/server-sessions/summary`);
+    const response = await axios.get(`${API_URL}/db/server-sessions/summary`, {
+      headers: createAuthHeaders(accessToken),
+    });
     return response.data;
   },
 
-  getPlayerAnalytics: async (): Promise<PlayerAnalyticsResponse> => {
+  getPlayerAnalytics: async (accessToken?: string): Promise<PlayerAnalyticsResponse> => {
     const axios = (await import('axios')).default;
-    const response = await axios.get(`${API_URL}/db/player-analytics/summary`);
+    const response = await axios.get(`${API_URL}/db/player-analytics/summary`, {
+      headers: createAuthHeaders(accessToken),
+    });
     return response.data;
   },
 
-  getGuilds: async (): Promise<Guild[]> => {
+  getGuilds: async (accessToken?: string): Promise<Guild[]> => {
     const axios = (await import('axios')).default;
-    const response = await axios.get(`${API_URL}/db/guild-info`);
+    const response = await axios.get(`${API_URL}/db/guild-info`, {
+      headers: createAuthHeaders(accessToken),
+    });
     return response.data;
   },
 
-  updateGuild: async (name: string, updates: Partial<Guild>): Promise<void> => {
+  updateGuild: async (name: string, updates: Partial<Guild>, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    const response = await axios.put(`${API_URL}/db/guild-info/${encodeURIComponent(name)}`, updates);
+    const response = await axios.put(`${API_URL}/db/guild-info/${encodeURIComponent(name)}`, updates, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...createAuthHeaders(accessToken),
+      },
+    });
     return response.data;
   },
 
-  getAccounts: async (): Promise<Account[]> => {
+  getAccounts: async (accessToken?: string): Promise<Account[]> => {
     const axios = (await import('axios')).default;
-    const response = await axios.get(`${API_URL}/db/accounts`);
+    const response = await axios.get(`${API_URL}/db/accounts`, {
+      headers: createAuthHeaders(accessToken),
+    });
     return response.data;
   },
 
-  setBan: async (accountName: string): Promise<void> => {
+  setBan: async (accountName: string, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.put(`${API_URL}/db/accounts/${accountName}/setban`);
+    await axios.put(`${API_URL}/db/accounts/${accountName}/setban`, {}, {
+      headers: createAuthHeaders(accessToken),
+    });
   },
 
-  clearBan: async (accountName: string): Promise<void> => {
+  clearBan: async (accountName: string, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.put(`${API_URL}/db/accounts/${accountName}/clearban`);
+    await axios.put(`${API_URL}/db/accounts/${accountName}/clearban`, {}, {
+      headers: createAuthHeaders(accessToken),
+    });
   },
 
-  setRewardBan: async (accountName: string): Promise<void> => {
+  setRewardBan: async (accountName: string, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.put(`${API_URL}/db/accounts/${accountName}/setrewardban`);
+    await axios.put(`${API_URL}/db/accounts/${accountName}/setrewardban`, {}, {
+      headers: createAuthHeaders(accessToken),
+    });
   },
 
-  clearRewardBan: async (accountName: string): Promise<void> => {
+  clearRewardBan: async (accountName: string, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.put(`${API_URL}/db/accounts/${accountName}/clearrewardban`);
+    await axios.put(`${API_URL}/db/accounts/${accountName}/clearrewardban`, {}, {
+      headers: createAuthHeaders(accessToken),
+    });
   },
 
-  getRewardRules: async (): Promise<RewardRule[]> => {
+  getRewardRules: async (accessToken?: string): Promise<RewardRule[]> => {
     const axios = (await import('axios')).default;
-    const response = await axios.get(`${API_URL}/db/mnee-reward-rules`);
+    const response = await axios.get(`${API_URL}/db/mnee-reward-rules`, {
+      headers: createAuthHeaders(accessToken),
+    });
     // Handle the API response format - it might be wrapped in an object
     return Array.isArray(response.data) ? response.data : [];
   },
 
-  updateRewardRule: async (ruleId: number, updatedData: Omit<RewardRule, 'rule_id' | 'created'>): Promise<void> => {
+  updateRewardRule: async (ruleId: number, updatedData: Omit<RewardRule, 'rule_id' | 'created'>, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.put(`${API_URL}/db/mnee-reward-rules/${ruleId}`, updatedData);
+    await axios.put(`${API_URL}/db/mnee-reward-rules/${ruleId}`, updatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...createAuthHeaders(accessToken),
+      },
+    });
   },
 
-  createRewardRule: async (ruleData: Omit<RewardRule, 'rule_id' | 'created'>): Promise<void> => {
+  createRewardRule: async (ruleData: Omit<RewardRule, 'rule_id' | 'created'>, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.post(`${API_URL}/db/mnee-reward-rules`, ruleData);
+    await axios.post(`${API_URL}/db/mnee-reward-rules`, ruleData, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...createAuthHeaders(accessToken),
+      },
+    });
   },
 
-  deleteRewardRule: async (ruleId: number): Promise<void> => {
+  deleteRewardRule: async (ruleId: number, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.delete(`${API_URL}/db/mnee-reward-rules/${ruleId}`);
+    await axios.delete(`${API_URL}/db/mnee-reward-rules/${ruleId}`, {
+      headers: createAuthHeaders(accessToken),
+    });
   },
 
   // News API methods
-  getNews: async (): Promise<NewsArticle[]> => {
+  getNews: async (accessToken?: string): Promise<NewsArticle[]> => {
     if (!API_URL || API_URL === 'undefined') {
       console.warn('API_URL is not configured');
       return [];
     }
     const axios = (await import('axios')).default;
-    const response = await axios.get(`${API_URL}/db/news`);
+    const response = await axios.get(`${API_URL}/db/news`, {
+      headers: createAuthHeaders(accessToken),
+    });
     return Array.isArray(response.data) ? response.data : [];
   },
 
-  createNews: async (newsData: Omit<NewsArticle, 'id' | 'created'>): Promise<void> => {
+  createNews: async (newsData: Omit<NewsArticle, 'id' | 'created'>, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.post(`${API_URL}/db/news`, newsData);
+    await axios.post(`${API_URL}/db/news`, newsData, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...createAuthHeaders(accessToken),
+      },
+    });
   },
 
-  updateNews: async (newsId: number, updatedData: Omit<NewsArticle, 'id' | 'created'>): Promise<void> => {
+  updateNews: async (newsId: number, updatedData: Omit<NewsArticle, 'id' | 'created'>, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.put(`${API_URL}/db/news/${newsId}`, updatedData);
+    await axios.put(`${API_URL}/db/news/${newsId}`, updatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...createAuthHeaders(accessToken),
+      },
+    });
   },
 
-  deleteNews: async (newsId: number): Promise<void> => {
+  deleteNews: async (newsId: number, accessToken?: string): Promise<void> => {
     const axios = (await import('axios')).default;
-    await axios.delete(`${API_URL}/db/news/${newsId}`);
+    await axios.delete(`${API_URL}/db/news/${newsId}`, {
+      headers: createAuthHeaders(accessToken),
+    });
   }
 };

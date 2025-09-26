@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
 import { apiService, RewardRule } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,11 +32,12 @@ const Rewards = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
+  const { accessToken } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: rewardRules, isLoading } = useQuery({
     queryKey: ["rewardRules"],
-    queryFn: apiService.getRewardRules,
+    queryFn: () => apiService.getRewardRules(accessToken),
   });
 
   const form = useForm<RewardRuleFormData>({
@@ -50,7 +52,7 @@ const Rewards = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ 0: ruleId, 1: data }: [number, any]) => apiService.updateRewardRule(ruleId, data),
+    mutationFn: ({ 0: ruleId, 1: data }: [number, any]) => apiService.updateRewardRule(ruleId, data, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rewardRules"] });
       setIsDialogOpen(false);
@@ -70,7 +72,7 @@ const Rewards = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: apiService.deleteRewardRule,
+    mutationFn: (ruleId: number) => apiService.deleteRewardRule(ruleId, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rewardRules"] });
       toast({
@@ -88,7 +90,7 @@ const Rewards = () => {
   });
 
   const createMutation = useMutation({
-    mutationFn: apiService.createRewardRule,
+    mutationFn: (ruleData: Omit<RewardRule, 'rule_id' | 'created'>) => apiService.createRewardRule(ruleData, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rewardRules"] });
       setIsDialogOpen(false);

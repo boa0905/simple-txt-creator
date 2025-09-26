@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { apiService } from "@/services/api";
 import { 
   Users, 
@@ -18,28 +19,29 @@ import {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { accessToken } = useAuth();
 
   const { data: onlineData, isLoading: onlineLoading } = useQuery({
     queryKey: ['onlinePlayers'],
-    queryFn: apiService.getOnlinePlayers,
+    queryFn: () => apiService.getOnlinePlayers(accessToken),
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   const { data: registeredData, isLoading: registeredLoading } = useQuery({
     queryKey: ['registeredPlayers'],
-    queryFn: apiService.getRegisteredPlayers,
+    queryFn: () => apiService.getRegisteredPlayers(accessToken),
     refetchInterval: 300000, // Refetch every 5 minutes
   });
 
   const { data: serverStats } = useQuery({
     queryKey: ['serverStats'],
-    queryFn: apiService.getServerStats,
+    queryFn: () => apiService.getServerStats(accessToken),
     refetchInterval: 3000, // Refetch every 3 seconds
   });
 
   const { data: uptimeData, isLoading: uptimeLoading } = useQuery({
     queryKey: ['serverUptime'],
-    queryFn: apiService.getServerUptime,
+    queryFn: () => apiService.getServerUptime(accessToken),
     refetchInterval: 300000, // Refetch every 5 minutes
   });
 
