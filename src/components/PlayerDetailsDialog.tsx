@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Character, apiService } from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +47,7 @@ export const PlayerDetailsDialog = ({ player, open, onOpenChange }: PlayerDetail
   const [formData, setFormData] = useState<Character | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     if (player) {
@@ -78,7 +80,7 @@ export const PlayerDetailsDialog = ({ player, open, onOpenChange }: PlayerDetail
         }
       });
 
-      await apiService.updateCharacter(player.name, updates);
+      await apiService.updateCharacter(player.name, updates, accessToken);
 
       toast({
         title: "Success",

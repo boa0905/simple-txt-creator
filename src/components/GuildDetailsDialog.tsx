@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +24,7 @@ export const GuildDetailsDialog = ({ guild, open, onOpenChange }: GuildDetailsDi
   const [editData, setEditData] = useState<Guild | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     if (guild) {
@@ -51,7 +53,7 @@ export const GuildDetailsDialog = ({ guild, open, onOpenChange }: GuildDetailsDi
         }
       });
 
-      await apiService.updateGuild(guild.name, updates);
+      await apiService.updateGuild(guild.name, updates, accessToken);
       toast({
         title: "Success",
         description: "Guild information updated successfully",
