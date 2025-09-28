@@ -36,10 +36,10 @@ const navigationItems = [
   { title: "Guilds", url: "/guilds", icon: Shield },
   { title: "Rewards", url: "/rewards", icon: Gift },
   { title: "News", url: "/news", icon: Newspaper },
-  { title: "Economy", url: "/economy", icon: Coins },
-  { title: "Events", url: "/events", icon: Calendar },
+  // { title: "Economy", url: "/economy", icon: Coins },
+  // { title: "Events", url: "/events", icon: Calendar },
   { title: "Monitoring", url: "/monitoring", icon: BarChart3 },
-  { title: "Audit Logs", url: "/logs", icon: ScrollText },
+  // { title: "Audit Logs", url: "/logs", icon: ScrollText },
 ];
 
 export function AppSidebar() {

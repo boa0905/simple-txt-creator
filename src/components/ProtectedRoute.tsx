@@ -41,9 +41,6 @@ export const ProtectedRoute = ({ children, allowedRoles = ['admin', 'user'] }: P
         }
       } else if (user?.role === "nothing") {
         // User has no access, show warning and redirect
-        setTimeout(() => {
-          navigate("/login");
-        }, 6000);
       }
     };
 
@@ -64,7 +61,7 @@ export const ProtectedRoute = ({ children, allowedRoles = ['admin', 'user'] }: P
             <div className="font-semibold mb-2">Access Denied</div>
             <div>You don't have permission to access this application.</div>
             <div className="text-sm text-muted-foreground mt-2">
-              Redirecting to login page...
+              waiting...
             </div>
           </AlertDescription>
         </Alert>
