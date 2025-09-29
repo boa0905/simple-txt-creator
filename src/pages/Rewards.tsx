@@ -32,6 +32,7 @@ const Rewards = () => {
   const [editingRule, setEditingRule] = useState<RewardRule | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [transactionSearchTerm, setTransactionSearchTerm] = useState("");
   const { toast } = useToast();
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
@@ -164,6 +165,13 @@ const Rewards = () => {
   const filteredRules = Array.isArray(rewardRules) 
     ? rewardRules.filter(rule => 
         rule.skill_name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+
+  // Filter transactions based on search term
+  const filteredTransactions = Array.isArray(rewardTransactions)
+    ? rewardTransactions.filter(transaction =>
+        transaction.account.toLowerCase().includes(transactionSearchTerm.toLowerCase())
       )
     : [];
 
@@ -443,6 +451,26 @@ const Rewards = () => {
         <TabsContent value="transactions" className="space-y-4">
           <Card>
             <CardHeader>
+              <CardTitle>Search & Filter</CardTitle>
+              <CardDescription>
+                Find specific transactions by account name
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search by account name..."
+                  value={transactionSearchTerm}
+                  onChange={(e) => setTransactionSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5" />
                 Reward Transactions
@@ -471,8 +499,8 @@ const Rewards = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {Array.isArray(rewardTransactions) && rewardTransactions.length > 0 ? (
-                      rewardTransactions.map((transaction, index) => (
+                    {Array.isArray(filteredTransactions) && filteredTransactions.length > 0 ? (
+                      filteredTransactions.map((transaction, index) => (
                         <TableRow key={`${transaction.tx_hash}-${index}`}>
                           <TableCell className="font-mono text-sm">{transaction.account}</TableCell>
                           <TableCell className="font-semibold text-green-600">
@@ -488,7 +516,7 @@ const Rewards = () => {
                     ) : (
                       <TableRow>
                         <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                          No reward transactions found
+                          {transactionSearchTerm ? `No transactions found for account "${transactionSearchTerm}"` : "No reward transactions found"}
                         </TableCell>
                       </TableRow>
                     )}
