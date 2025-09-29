@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { apiService, RewardRule } from "@/services/api";
+import { apiService, RewardRule, RewardTransaction } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -14,7 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Edit, Trash2, Gift, Search } from "lucide-react";
+import { Edit, Trash2, Gift, Search, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const rewardRuleSchema = z.object({
@@ -38,6 +38,11 @@ const Rewards = () => {
   const { data: rewardRules, isLoading } = useQuery({
     queryKey: ["rewardRules"],
     queryFn: () => apiService.getRewardRules(accessToken),
+  });
+
+  const { data: rewardTransactions, isLoading: isLoadingTransactions } = useQuery({
+    queryKey: ["rewardTransactions"],
+    queryFn: () => apiService.getRewardTransactions(accessToken),
   });
 
   const form = useForm<RewardRuleFormData>({
@@ -417,6 +422,63 @@ const Rewards = () => {
                )}
             </TableBody>
           </Table>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="h-5 w-5" />
+            Reward Transactions
+          </CardTitle>
+          <CardDescription>
+            View all reward payments and transactions
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoadingTransactions ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-2"></div>
+                <p className="text-sm text-muted-foreground">Loading transactions...</p>
+              </div>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Account</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Note</TableHead>
+                  <TableHead>Transaction Hash</TableHead>
+                  <TableHead>Date</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.isArray(rewardTransactions) && rewardTransactions.length > 0 ? (
+                  rewardTransactions.map((transaction, index) => (
+                    <TableRow key={`${transaction.tx_hash}-${index}`}>
+                      <TableCell className="font-mono text-sm">{transaction.account}</TableCell>
+                      <TableCell className="font-semibold text-green-600">
+                        +{transaction.amount.toLocaleString()}¢
+                      </TableCell>
+                      <TableCell>{transaction.note}</TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground">
+                        {transaction.tx_hash.slice(0, 8)}...{transaction.tx_hash.slice(-8)}
+                      </TableCell>
+                      <TableCell>{transaction.created}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                      No reward transactions found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

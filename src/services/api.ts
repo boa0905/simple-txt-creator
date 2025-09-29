@@ -96,6 +96,14 @@ export interface RewardRule {
   created: string;
 }
 
+export interface RewardTransaction {
+  account: string;
+  amount: number;
+  note: string;
+  tx_hash: string;
+  created: string;
+}
+
 export interface NewsArticle {
   id: number;
   title: string;
@@ -344,6 +352,14 @@ export const apiService = {
     await axios.delete(`${API_URL}/db/mnee-reward-rules/${ruleId}`, {
       headers: createAuthHeaders(accessToken),
     });
+  },
+
+  getRewardTransactions: async (accessToken?: string): Promise<RewardTransaction[]> => {
+    const axios = (await import('axios')).default;
+    const response = await axios.get(`${API_URL}/db/mnee_payment_tx`, {
+      headers: createAuthHeaders(accessToken),
+    });
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   // News API methods
