@@ -36,8 +36,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (userData: User, token: string) => {
     setUser(userData);
     setAccessToken(token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('accessToken', token);
+    // localStorage.setItem('user', JSON.stringify(userData));
+    // localStorage.setItem('accessToken', token);
   };
 
   const logout = async () => {
@@ -54,8 +54,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setUser(null);
       setAccessToken(null);
-      localStorage.removeItem("user");
-      localStorage.removeItem("accessToken");
+      // localStorage.removeItem("user");
+      // localStorage.removeItem("accessToken");
     }
   };
 
@@ -63,19 +63,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       const updatedUser = { ...user, role: newRole };
       setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      // localStorage.setItem('user', JSON.stringify(updatedUser));
     }
   };
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('accessToken');
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem('user');
+  //   const storedToken = localStorage.getItem('accessToken');
 
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setAccessToken(storedToken);
-    }
-  }, []);
+  //   if (storedUser && storedToken) {
+  //     setUser(JSON.parse(storedUser));
+  //     setAccessToken(storedToken);
+  //   }
+  // }, []);
 
   const value = {
     user,
