@@ -507,9 +507,19 @@ const Rewards = () => {
                             +{transaction.amount.toLocaleString()}¢
                           </TableCell>
                           <TableCell>{transaction.note}</TableCell>
-                          <TableCell className="font-mono text-xs text-muted-foreground">
-                            {transaction.tx_hash.slice(0, 8)}...{transaction.tx_hash.slice(-8)}
-                          </TableCell>
+                      <TableCell 
+                        className="font-mono text-xs text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+                        onClick={() => {
+                          navigator.clipboard.writeText(transaction.tx_hash);
+                          toast({
+                            title: "Copied!",
+                            description: "Transaction hash copied to clipboard",
+                          });
+                        }}
+                        title="Click to copy full hash"
+                      >
+                        {transaction.tx_hash.slice(0, 8)}...{transaction.tx_hash.slice(-8)}
+                      </TableCell>
                           <TableCell>{transaction.created}</TableCell>
                         </TableRow>
                       ))
