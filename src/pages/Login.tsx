@@ -45,29 +45,28 @@ const Login = () => {
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4 sm:p-6 md:p-8">
         <div className="absolute inset-0 gaming-gradient opacity-20"></div>
 
         <Card className="w-full max-w-md card-shadow relative z-10">
-          <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-2xl primary-gradient flex items-center justify-center gaming-shadow">
-              <Shield className="w-8 h-8 text-primary-foreground" />
+          <CardHeader className="text-center space-y-3 sm:space-y-4 px-4 sm:px-6">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl primary-gradient flex items-center justify-center gaming-shadow">
+              <Shield className="w-7 h-7 sm:w-8 sm:h-8 text-primary-foreground" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold">Ageless Republic</CardTitle>
-              <p className="text-muted-foreground mt-2">Secure access to admin panel</p>
+              <CardTitle className="text-xl sm:text-2xl font-bold">Ageless Republic</CardTitle>
+              <p className="text-sm sm:text-base text-muted-foreground mt-2">Secure access to admin panel</p>
             </div>
           </CardHeader>
 
-          <CardContent>
-            <div className="w-full">
+          <CardContent className="px-4 sm:px-6">
+            <div className="w-full flex justify-center">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
                 useOneTap
                 theme="outline"
                 size="large"
-                width={400}
               />
             </div>
           </CardContent>
