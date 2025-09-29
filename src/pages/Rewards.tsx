@@ -15,7 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Edit, Trash2, Gift, Search, CreditCard } from "lucide-react";
+import { Edit, Trash2, Gift, Search, CreditCard, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const rewardRuleSchema = z.object({
@@ -518,7 +518,10 @@ const Rewards = () => {
                         }}
                         title="Click to copy full hash"
                       >
-                        {transaction.tx_hash.slice(0, 8)}...{transaction.tx_hash.slice(-8)}
+                        <div className="flex items-center gap-2">
+                          {transaction.tx_hash.slice(0, 8)}...{transaction.tx_hash.slice(-8)}
+                          <Copy className="h-3 w-3" />
+                        </div>
                       </TableCell>
                           <TableCell>{transaction.created}</TableCell>
                         </TableRow>
