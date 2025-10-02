@@ -441,143 +441,13 @@ const Rewards = () => {
                       <TableCell>{rule.created}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEdit(rule)}
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px]">
-                              <DialogHeader>
-                                <DialogTitle>
-                                  {editingRule ? "Edit Reward Rule" : "Create New Reward Rule"}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  {editingRule
-                                    ? `Modify the reward rule configuration for ${editingRule.skill_name}`
-                                    : "Create a new reward rule configuration"
-                                  }
-                                </DialogDescription>
-                              </DialogHeader>
-                              <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                  <FormField
-                                    control={form.control}
-                                    name="skill_name"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Skill Name</FormLabel>
-                                        <FormControl>
-                                          <Input {...field} disabled={!!editingRule} />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <FormField
-                                      control={form.control}
-                                      name="min_level"
-                                      render={({ field }) => (
-                                        <FormItem>
-                                          <FormLabel>Min Level</FormLabel>
-                                          <FormControl>
-                                            <Input
-                                              type="number"
-                                              {...field}
-                                              onChange={(e) => field.onChange(parseInt(e.target.value))}
-                                            />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                    <FormField
-                                      control={form.control}
-                                      name="max_level"
-                                      render={({ field }) => (
-                                        <FormItem>
-                                          <FormLabel>Max Level</FormLabel>
-                                          <FormControl>
-                                            <Input
-                                              type="number"
-                                              max={25}
-                                              {...field}
-                                              onChange={(e) => {
-                                                let value = parseInt(e.target.value) || 0;
-                                                field.onChange(Math.min(value, 25));
-                                              }}
-                                            />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-
-                                  </div>
-                                  <FormField
-                                    control={form.control}
-                                    name="reward_amount"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Reward Amount(¢)</FormLabel>
-                                        <FormControl>
-                                          <Input
-                                            type="number"
-                                            {...field}
-                                            onChange={(e) => {
-                                              let value = parseInt(e.target.value) || 0;
-                                              field.onChange(Math.min(value, 50));
-                                            }}
-                                          />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  <FormField
-                                    control={form.control}
-                                    name="active"
-                                    render={({ field }) => (
-                                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                                        <div className="space-y-0.5">
-                                          <FormLabel>Active Status</FormLabel>
-                                          <div className="text-sm text-muted-foreground">
-                                            Enable or disable this reward rule
-                                          </div>
-                                        </div>
-                                        <FormControl>
-                                          <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                          />
-                                        </FormControl>
-                                      </FormItem>
-                                    )}
-                                  />
-                                  <div className="flex justify-end gap-2">
-                                    <Button
-                                      type="button"
-                                      variant="outline"
-                                      onClick={() => setIsDialogOpen(false)}
-                                    >
-                                      Cancel
-                                    </Button>
-                                    <Button type="submit" disabled={updateMutation.isPending || createMutation.isPending}>
-                                      {editingRule
-                                        ? (updateMutation.isPending ? "Updating..." : "Update Rule")
-                                        : (createMutation.isPending ? "Creating..." : "Create Rule")
-                                      }
-                                    </Button>
-                                  </div>
-                                </form>
-                              </Form>
-                            </DialogContent>
-                          </Dialog>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEdit(rule)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
 
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
@@ -619,6 +489,134 @@ const Rewards = () => {
               </Table>
             </CardContent>
           </Card>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingRule ? "Edit Reward Rule" : "Create New Reward Rule"}
+                </DialogTitle>
+                <DialogDescription>
+                  {editingRule
+                    ? `Modify the reward rule configuration for ${editingRule.skill_name}`
+                    : "Create a new reward rule configuration"
+                  }
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="skill_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Skill Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} disabled={!!editingRule} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="min_level"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Min Level</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="max_level"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Max Level</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              max={25}
+                              {...field}
+                              onChange={(e) => {
+                                let value = parseInt(e.target.value) || 0;
+                                field.onChange(Math.min(value, 25));
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="reward_amount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Reward Amount(¢)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={(e) => {
+                              let value = parseInt(e.target.value) || 0;
+                              field.onChange(Math.min(value, 50));
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="active"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                          <FormLabel>Active Status</FormLabel>
+                          <div className="text-sm text-muted-foreground">
+                            Enable or disable this reward rule
+                          </div>
+                        </div>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={updateMutation.isPending || createMutation.isPending}>
+                      {editingRule
+                        ? (updateMutation.isPending ? "Updating..." : "Update Rule")
+                        : (createMutation.isPending ? "Creating..." : "Create Rule")
+                      }
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         <TabsContent value="transactions" className="space-y-4">
