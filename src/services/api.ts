@@ -4,8 +4,8 @@ export interface OnlinePlayersResponse {
   onlinePlayers: number;
 }
 
-export interface RegisteredPlayersResponse {
-  registeredPlayers: number;
+export interface RegisteredAccountsResponse {
+  registeredAccount: number;
 }
 
 export interface ServerStatsResponse {
@@ -98,6 +98,8 @@ export interface RewardRule {
 
 export interface RewardTransaction {
   account: string;
+  paymail: string;
+  legacy_adr: string;
   amount: number;
   note: string;
   tx_hash: string;
@@ -206,8 +208,8 @@ export const apiService = {
     return response.json();
   },
 
-  getRegisteredPlayers: async (accessToken?: string): Promise<RegisteredPlayersResponse> => {
-    const response = await fetch(`${API_URL}/db/characters/stats/registered`, {
+  getRegisteredAccounts: async (accessToken?: string): Promise<RegisteredAccountsResponse> => {
+    const response = await fetch(`${API_URL}/db/accounts/registered`, {
       headers: createAuthHeaders(accessToken),
     });
     if (!response.ok) {
@@ -360,6 +362,24 @@ export const apiService = {
       headers: createAuthHeaders(accessToken),
     });
     return Array.isArray(response.data) ? response.data : [];
+  },
+
+  sendRewardByAdmin: async (data: {
+    key: string;
+    walletAddress: string;
+    paymail: string;
+    amount: number;
+    note: string;
+    password: string;
+  }, accessToken?: string): Promise<any> => {
+    const axios = (await import('axios')).default;
+    const response = await axios.post(`${API_URL}/sendRewardByAdmin`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...createAuthHeaders(accessToken),
+      },
+    });
+    return response.data;
   },
 
   // News API methods

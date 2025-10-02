@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,10 @@ const Players = () => {
 
   useEffect(() => {
     const fetchPlayers = async () => {
+      if (!accessToken) return;
+      
       try {
+        setLoading(true);
         const [charactersData, accountsData] = await Promise.all([
           apiService.getCharacters(accessToken),
           apiService.getAccounts(accessToken)
@@ -59,12 +62,25 @@ const Players = () => {
     };
 
     fetchPlayers();
-  }, [toast]);
+  }, [accessToken, toast]);
 
-  const filteredPlayers = players.filter(player => 
-    player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    player.account.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPlayers = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return players;
+    return players.filter((player) => {
+      const haystack = [
+        player.name,
+        player.account,
+        player.classname,
+        player.level?.toString(),
+        player.accountInfo?.name,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [players, searchTerm]);
 
   const handlePlayerClick = (player: PlayerWithAccount) => {
     setSelectedPlayer(player);
@@ -160,7 +176,7 @@ const Players = () => {
             <div className="space-y-4">
               {filteredPlayers.map((player) => (
                 <div 
-                  key={player.account}
+                  key={`${player.account}-${player.name}`}
                   className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 smooth-transition cursor-pointer"
                   onClick={() => handlePlayerClick(player)}
                 >

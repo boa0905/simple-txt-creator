@@ -29,8 +29,6 @@ export const ProtectedRoute = ({ children, allowedRoles = ['admin', 'user'] }: P
           const data = res.data;
           // Store auth data using context
           login(data.user, data.accessToken);
-
-          navigate("/dashboard");
         } catch (err: any) {
           navigate("/login");
           if (err.response) {

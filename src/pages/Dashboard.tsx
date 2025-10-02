@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   const { data: registeredData, isLoading: registeredLoading } = useQuery({
     queryKey: ['registeredPlayers'],
-    queryFn: () => apiService.getRegisteredPlayers(accessToken),
+    queryFn: () => apiService.getRegisteredAccounts(accessToken),
     refetchInterval: 300000, // Refetch every 5 minutes
   });
 
@@ -137,7 +137,7 @@ const Dashboard = () => {
         ) : (
           <StatsCard
             title="Total Accounts"
-            value={registeredData?.registeredPlayers?.toLocaleString() ?? "0"}
+            value={registeredData?.registeredAccount?.toLocaleString() ?? "0"}
             description="All time registrations"
             icon={Shield}
           />
